@@ -124,8 +124,8 @@ class LDMSSTrainer(object):
     def train(self):
         device = self.accelerator.device
         self.diffusion_process.train()
-        shape = (self.test_batch_size, self.channels, self.image_size, self.image_size)
-        noise_fix = torch.randn((self.test_batch_size, self.channels, self.image_size, self.image_size), device = device)
+        shape = (self.test_batch_size, self.channels)
+        noise_fix = torch.randn((self.test_batch_size, self.channels), device = device)
 
         cache = {}
 
