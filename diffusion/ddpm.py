@@ -432,7 +432,7 @@ class DDPM(nn.Module):
             reduction_dim = [1,2,3]
         elif len(shape_list) == 3:
             reduction_dim = [1,2]
-        elif len(shape_list) == 3:
+        elif len(shape_list) == 2:
             reduction_dim = [1]
 
         loss = self.get_loss(model_out, target, mean=False).mean(dim=reduction_dim)
