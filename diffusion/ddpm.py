@@ -422,6 +422,7 @@ class DDPM(nn.Module):
             target = x_start
             model_out = self.predict_start_from_noise(x_noisy, t, model_out)
         elif self.parameterization == 'v':
+            print('velocity')
             target = self.get_velocity(x_start, noise, t)
             model_out = self.get_velocity(x_start, model_out, t)
         else:
