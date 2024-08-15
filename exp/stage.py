@@ -337,8 +337,6 @@ def second_stage_train(args):
 def single_stage_train(args):
     if args.domain == 'image':
         from tools.ldm.image import LDMTrainer
-        from models.d2c_vae.autoencoder_unet import Autoencoder
-        from models.d2c_vae.mlp import MLP
         from diffusion.ddpm import DDPM
 
         ## Get data

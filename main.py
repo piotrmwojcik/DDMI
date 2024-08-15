@@ -47,7 +47,7 @@ def main(args):
 
         second_stage_train(args)
 
-    else:
+    elif args.exp == 'ss_ldm':
         config = OmegaConf.load(args.configs)
         args.data_config = config.data
         args.loss_config = config.model.params.lossconfig
