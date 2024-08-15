@@ -170,8 +170,6 @@ class LDMSSTrainer(object):
                         #        z = self.vaemodel.encode(y).sample()
                         ## LDM
                         z = z.detach()
-                        print('!!!!')
-                        print(z.shape)
                         p_loss,_ = self.diffusion_process(z)
                         p_loss = p_loss / self.gradient_accumulate_every
 
