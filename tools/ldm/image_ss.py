@@ -165,8 +165,7 @@ class LDMSSTrainer(object):
 
                     z = []
 
-                    for idx, _code in enumerate(_code_list):
-                        mlp = _code[i]
+                    for idx, mlp in enumerate(_code_list):
                         state_dict = mlp.state_dict()
                         layers = []
                         layer_names = []
