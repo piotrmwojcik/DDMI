@@ -414,6 +414,8 @@ class DDPM(nn.Module):
         model_out = self.get_mixed_prediction(self.mixed_prediction, model_out, self.mixing_logit, mixing_component)
 
         print('!!!')
+        print('!!!')
+        print(x_noisy.shape)
         print(model_out.shape)
 
         loss_dict = {}
