@@ -74,10 +74,10 @@ class LDMSSTrainer(object):
             self.diffusion_process.load_state_dict(data_pth['diffusion'])
             if self.accelerator.is_main_process:
                 self.ema.load_state_dict(data_pth['ema'])
-        else:
-            # Load from checkpoint
-            print('Load VAE checkpoints!')
-            data_pth = torch.load(os.path.join(args.data_config.save_pth, 'model-last.pt'), map_location='cpu')
+        #else:
+        #    # Load from checkpoint
+        #    print('Load VAE checkpoints!')
+        #    data_pth = torch.load(os.path.join(args.data_config.save_pth, 'model-last.pt'), map_location='cpu')
 
         #config = {'ldm': self.ema.ema_model, 'vae': self.vaemodel, 'mlp': self.mlp}
         #ddmi = DDMI(self.ema.ema_model, self.vaemodel, self.mlp)
@@ -85,7 +85,7 @@ class LDMSSTrainer(object):
         #ddmi.from_pretrained('DogyunPark/ddmi_afhqcat_ema')
         #import pdb; pdb.set_trace()
         # Wrap with accelerator
-        self.data, self.vaemodel, self.mlp, self.diffusion_process, self.dae_opt = self.accelerator.prepare(self.data, self.vaemodel, self.mlp, self.diffusion_process, self.dae_opt)
+        self.data, self.diffusion_process, self.dae_opt = self.accelerator.prepare(self.data, self.diffusion_process, self.dae_opt)
 
         ## Save directory
         self.results_folder = args.data_config.save_pth
