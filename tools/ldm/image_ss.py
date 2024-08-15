@@ -144,7 +144,7 @@ class LDMSSTrainer(object):
                     bs = x.shape[0]
                     for i in range(bs):
                         if fn[i] in cache:
-                            _code_list.append(generate_mlp_from_weights(cache[fn[i]]))
+                            _code_list.append(generate_mlp_from_weights(cache[fn[i]]).cuda())
                         else:
                             mlp = Siren(in_features=2, out_features=3, hidden_features=128,
                                         hidden_layers=3, outermost_linear=True).cuda()
@@ -226,7 +226,7 @@ class LDMSSTrainer(object):
                     #output_img = output_img.clamp(min = -1., max = 1.)
                     #output_img = unsymmetrize_image_data(output_img) =
 
-                    vtils.save_image(output_img, os.path.join('/data/pwojcik/ddmi_dump/', '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
+                    vtils.save_image(output_img.view(128, 128), os.path.join('/data/pwojcik/ddmi_dump/', '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
                     self.save(step = self.step)
                 
                 #if self.step % 100 == 0 and self.accelerator.is_main_process and self.step > 300:
