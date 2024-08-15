@@ -171,8 +171,8 @@ class LDMSSTrainer(object):
                         layer_names = []
                         input = []
                         for l in state_dict:
-                            shape = state_dict[l].shape
-                            layers.append(np.prod(shape))
+                            st_shape = state_dict[l].shape
+                            layers.append(np.prod(st_shape))
                             layer_names.append(l)
                             input.append(state_dict[l].flatten())
                         input = torch.hstack(input).cuda()
