@@ -123,8 +123,6 @@ class LDMSSTrainer(object):
 
     def train(self):
         device = self.accelerator.device
-        self.vaemodel.eval()
-        self.mlp.eval()
         self.diffusion_process.train()
         shape = (self.test_batch_size, self.channels, self.image_size, self.image_size)
         noise_fix = torch.randn((self.test_batch_size, self.channels, self.image_size, self.image_size), device = device)
