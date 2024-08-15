@@ -25,6 +25,7 @@ model:
   siren:
     in_features: 2
     out_features: 3
+    hidden_layers: 3
     hidden_features: 128
     outermost_linear: True
 
