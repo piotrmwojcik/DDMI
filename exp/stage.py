@@ -366,13 +366,11 @@ def single_stage_train(args):
                                                   num_workers=2,
                                                   pin_memory=False,
                                                   drop_last=False)
-        print('!!!')
-        print(args.model_cfg)
-        mlp = Siren(in_features=args.model_cfg.siren.in_features,
-                    out_features=args.model_cfg.siren.out_features,
-                    hidden_features=args.model_cfg.siren.hidden_features,
-                    hidden_layers=args.model_cfg.siren.hidden_layers,
-                    outermost_linear=args.model_cfg.siren.outermost_linear)
+        mlp = Siren(in_features=args.siren.in_features,
+                    out_features=args.siren.out_features,
+                    hidden_features=args.siren.hidden_features,
+                    hidden_layers=args.siren.hidden_layers,
+                    outermost_linear=args.siren.outermost_linear)
         state_dict = mlp.state_dict()
         layers = []
         layer_names = []
