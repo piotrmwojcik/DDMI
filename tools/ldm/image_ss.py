@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 from accelerate import Accelerator
 from ema_pytorch import EMA
 
-from models.ddmi import DDMI
+
 from utils.general_utils import symmetrize_image_data, unsymmetrize_image_data, exists, convert_to_coord_format_2d, get_scale_injection
 from evals.eval import test_fid_ddpm, test_fid_ddpm_N
 
