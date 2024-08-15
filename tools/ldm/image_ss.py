@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 from accelerate import Accelerator
 from ema_pytorch import EMA
 
-from models.siren import Siren
+from models.siren import Siren, get_mgrid
 from utils.general_utils import symmetrize_image_data, unsymmetrize_image_data, exists, convert_to_coord_format_2d, get_scale_injection
 from evals.eval import test_fid_ddpm, test_fid_ddpm_N
 
@@ -135,9 +135,17 @@ class LDMSSTrainer(object):
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
                     x = x.permute(0, 2, 3, 1).view(5, 128*128, 3)
+                    input = get_mgrid(128, dim=2).cuda().unsqueeze()
+                    input = input.repeat(5, 1, 1)
 
                     mlp = Siren(in_features=2, out_features=3, hidden_features=128,
                                 hidden_layers=3, outermost_linear=True)
+                    model_output, coords = mlp(input)
+                    optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
+
+                    for i in range(15):
+                        loss = ((model_output - x) ** 2).mean()
+
                     state_dict = mlp.state_dict()
                     layers = []
                     layer_names = []
