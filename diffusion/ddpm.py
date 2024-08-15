@@ -416,6 +416,8 @@ class DDPM(nn.Module):
         loss_dict = {}
         if self.parameterization == "eps":
             target = noise
+            print('!!!!!')
+            print(target.shape)
         elif self.parameterization == "x0":
             target = x_start
             model_out = self.predict_start_from_noise(x_noisy, t, model_out)
