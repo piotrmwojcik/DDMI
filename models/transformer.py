@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from siren import Siren, generate_mlp_from_weights
+#from siren import Siren, generate_mlp_from_weights
 
 
 class SelfAttention(nn.Module):
@@ -522,25 +522,25 @@ class Transformer(nn.Module):
             output = output + x_prev
         return output
 
-
-if __name__ == "__main__":
-    mlp = Siren(in_features=2, out_features=3, hidden_features=128,
-                hidden_layers=3, outermost_linear=True)
-    state_dict = mlp.state_dict()
-    layers = []
-    layer_names = []
-    input = []
-    for l in state_dict:
-        shape = state_dict[l].shape
-        layers.append(np.prod(shape))
-        layer_names.append(l)
-        input.append(state_dict[l].flatten())
-    input = torch.hstack(input).unsqueeze(0).cuda()
-
-    net = Transformer(layers, layer_names, split_policy="layer_by_layer").cuda()
-    t = torch.randint(0, 1000, (len(input), 1)).cuda()
-    print(input.shape, t.shape)
-    out = net(input, t)
-    random_mlp = torch.rand(input.shape)
-    siren = generate_mlp_from_weights(random_mlp.squeeze())
-    print(out.shape)
+#
+# if __name__ == "__main__":
+#     mlp = Siren(in_features=2, out_features=3, hidden_features=128,
+#                 hidden_layers=3, outermost_linear=True)
+#     state_dict = mlp.state_dict()
+#     layers = []
+#     layer_names = []
+#     input = []
+#     for l in state_dict:
+#         shape = state_dict[l].shape
+#         layers.append(np.prod(shape))
+#         layer_names.append(l)
+#         input.append(state_dict[l].flatten())
+#     input = torch.hstack(input).unsqueeze(0).cuda()
+#
+#     net = Transformer(layers, layer_names, split_policy="layer_by_layer").cuda()
+#     t = torch.randint(0, 1000, (len(input), 1)).cuda()
+#     print(input.shape, t.shape)
+#     out = net(input, t)
+#     random_mlp = torch.rand(input.shape)
+#     siren = generate_mlp_from_weights(random_mlp.squeeze())
+#     print(out.shape)
