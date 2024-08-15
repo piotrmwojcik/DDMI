@@ -140,33 +140,35 @@ class LDMSSTrainer(object):
                     input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                     input = input.repeat(5, 1, 1)
 
-                    _code_list = []
+                    _mlp_list = []
                     bs = x.shape[0]
                     for i in range(bs):
                         if fn[i] in cache:
-                            _code_list.append(generate_mlp_from_weights(cache[fn[i]]).cuda())
+                            _mlp_list.append(generate_mlp_from_weights(cache[fn[i]]).cuda())
                         else:
                             mlp = Siren(in_features=2, out_features=3, hidden_features=128,
                                         hidden_layers=3, outermost_linear=True).cuda()
-                            _code_list.append(mlp)
+                            _mlp_list.append(mlp)
 
+                    print(mlp.parameters())
 
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
-                    for i in range(20):
-                        model_output = []
-                        for _code in _code_list:
-                            mo, _ = mlp(input)
-                        model_output.append(mo.unsqueeze(0))
-                        model_output = torch.cat(model_output, dim=0)
-                        loss = ((model_output - x) ** 2).mean()
-                        optim.zero_grad()
-                        loss.backward()
-                        optim.step()
+                    with self.accelerator.autocast():
+                        for i in range(20):
+                            model_output = []
+                            for _code in _mlp_list:
+                                mo, _ = mlp(input)
+                            model_output.append(mo.unsqueeze(0))
+                            model_output = torch.cat(model_output, dim=0)
+                            loss = ((model_output - x) ** 2).mean()
+                            optim.zero_grad()
+                            loss.backward()
+                            optim.step()
 
                     z = []
 
-                    for idx, mlp in enumerate(_code_list):
+                    for idx, mlp in enumerate(_mlp_list):
                         state_dict = mlp.state_dict()
                         layers = []
                         layer_names = []
