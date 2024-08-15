@@ -411,6 +411,7 @@ class DDPM(nn.Module):
         print('!!!!')
         print(x_start.shape)
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
+        print(x_noisy.shape)
         model_out = self.model(x_noisy, t, cond)
         print('model out')
         print(model_out.shape)
