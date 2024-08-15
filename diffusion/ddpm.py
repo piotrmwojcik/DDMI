@@ -413,6 +413,9 @@ class DDPM(nn.Module):
         mixing_component = self.get_mixing_component(x_noisy, t)
         model_out = self.get_mixed_prediction(self.mixed_prediction, model_out, self.mixing_logit, mixing_component)
 
+        print('!!!')
+        print(model_out.shape)
+
         loss_dict = {}
         if self.parameterization == "eps":
             target = noise
@@ -430,10 +433,6 @@ class DDPM(nn.Module):
             reduction_dim = [1,2,3]
         elif len(shape_list) == 3:
             reduction_dim = [1,2]
-
-        print('!!!')
-        print(model_out.shape)
-        print(target.shape)
 
         loss = self.get_loss(model_out, target, mean=False).mean(dim=reduction_dim)
 
