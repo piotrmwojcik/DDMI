@@ -9,8 +9,6 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from embedder import Embedder
-from mlp_models import MLP
 from siren import Siren, generate_mlp_from_weights
 
 
