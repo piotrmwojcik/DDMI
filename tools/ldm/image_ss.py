@@ -166,6 +166,11 @@ class LDMSSTrainer(object):
                             optim.zero_grad()
                             loss.backward()
                             optim.step()
+                            if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
+                                img_out = model_output[0]
+                                vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
+                                                 os.path.join('/data/pwojcik/ddmi_dump/', 'inr_t_{}.jpg'.format(self.step)),
+                                                 normalize=False, scale_each=False)
 
                     z = []
 
