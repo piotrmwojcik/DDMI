@@ -303,7 +303,7 @@ class DDPM(nn.Module):
 
     def model_predictions(self, x, cond, t, x_self_cond = None, clip_x_start = False, enable_mask=False):
         if cond == None:
-            uncond_model_out = self.model(x, t, cond, x_self_cond)
+            uncond_model_out = self.model(x, t, cond)
             mixing_component = self.get_mixing_component(x, t)
             uncond_model_out = self.get_mixed_prediction(self.mixed_prediction, uncond_model_out, self.mixing_logit, mixing_component)
             model_output = uncond_model_out

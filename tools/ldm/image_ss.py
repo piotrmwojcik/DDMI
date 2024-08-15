@@ -220,8 +220,8 @@ class LDMSSTrainer(object):
                             #else:
                             #    pe_test = self.vaemodel.decode(z_test)
                             output_img = self.mlp(coords, hdbf=pe_test)
-                    output_img = output_img.clamp(min = -1., max = 1.)
-                    output_img = unsymmetrize_image_data(output_img)
+                    #output_img = output_img.clamp(min = -1., max = 1.)
+                    #output_img = unsymmetrize_image_data(output_img)
 
                     vtils.save_image(output_img, os.path.join(self.results_pth, '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
                     self.save(step = self.step)
