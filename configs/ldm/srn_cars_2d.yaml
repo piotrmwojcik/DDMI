@@ -34,7 +34,7 @@ data:
   mode: train
   data_dir: /data_ssd/pwojcik/sh_raw_train/
   test_data_dir: /data_ssd/pwojcik/sh_raw_test/
-  save_pth: ./save_path/
+  save_pth: ./srn_cars_2d
   batch_size: 5
   test_batch_size: 6
   test_resolution: 512
