@@ -18,7 +18,7 @@ model:
       image_size: 64
       channels: 64
       clip_denoised: False
-      mixed_prediction: True
+      mixed_prediction: False
       mixed_init: -6
       sampling_timesteps: 50
       ddim_sampling_eta: 0
