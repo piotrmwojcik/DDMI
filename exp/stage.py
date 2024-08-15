@@ -342,7 +342,7 @@ def single_stage_train(args):
         ## Get data
         transform_list = transforms.Compose([
             transforms.RandomHorizontalFlip(),
-            transforms.Resize((256, 256)),
+            transforms.Resize((128, 128)),
             transforms.ToTensor(),
         ])
         test_transform_list = transforms.Compose([
@@ -367,11 +367,11 @@ def single_stage_train(args):
                                                   pin_memory=False,
                                                   drop_last=False)
 
-        mlp = Siren(in_features=args.data_config.model.siren.in_features,
-                    out_features=args.data_config.model.siren.out_features,
-                    hidden_features=args.data_config.model.siren.hidden_features,
-                    hidden_layers=args.data_config.model.siren.hidden_layers,
-                    outermost_linear=args.data_config.model.siren.outermost_linear)
+        mlp = Siren(in_features=args.model_cfg.siren.in_features,
+                    out_features=args.model_cfg.model.siren.out_features,
+                    hidden_features=args.model_cfg.model.siren.hidden_features,
+                    hidden_layers=args.model_cfg.model.siren.hidden_layers,
+                    outermost_linear=args.model_cfg.model.siren.outermost_linear)
         state_dict = mlp.state_dict()
         layers = []
         layer_names = []
