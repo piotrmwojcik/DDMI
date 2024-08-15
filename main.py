@@ -68,7 +68,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--exp', type=str, required=True, choices=['d2c-vae', 'ldm'])
+    parser.add_argument('--exp', type=str, required=True, choices=['d2c-vae', 'ldm', 'ss_ldm'])
     parser.add_argument('--configs', type=str)
     parser.add_argument('--seed', type=int, default=777)
 
