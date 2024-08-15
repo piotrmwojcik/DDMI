@@ -368,10 +368,10 @@ def single_stage_train(args):
                                                   drop_last=False)
 
         mlp = Siren(in_features=args.model_cfg.siren.in_features,
-                    out_features=args.model_cfg.model.siren.out_features,
-                    hidden_features=args.model_cfg.model.siren.hidden_features,
-                    hidden_layers=args.model_cfg.model.siren.hidden_layers,
-                    outermost_linear=args.model_cfg.model.siren.outermost_linear)
+                    out_features=args.model_cfg.siren.out_features,
+                    hidden_features=args.model_cfg.siren.hidden_features,
+                    hidden_layers=args.model_cfg.siren.hidden_layers,
+                    outermost_linear=args.model_cfg.siren.outermost_linear)
         state_dict = mlp.state_dict()
         layers = []
         layer_names = []
