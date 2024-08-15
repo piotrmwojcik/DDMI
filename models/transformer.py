@@ -11,7 +11,7 @@ from torch.nn import functional as F
 
 from embedder import Embedder
 from mlp_models import MLP
-from models.siren import Siren
+from siren import Siren
 
 
 class SelfAttention(nn.Module):
