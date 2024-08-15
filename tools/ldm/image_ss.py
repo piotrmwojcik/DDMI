@@ -130,18 +130,20 @@ class LDMSSTrainer(object):
         with tqdm(initial = self.step, total = self.epochs) as pbar:
             while self.step < self.epochs:
                 for idx, (x, _) in enumerate(self.data):
-                    x = symmetrize_image_data(x)
-                    y = trans_F.resize(x, 256, antialias = True)
-                    y = y.clamp(-1., 1.)
-                    b, c, h, w = x.shape
+                    #x = symmetrize_image_data(x)
+                    #y = trans_F.resize(x, 256, antialias = True)
+                    #y = y.clamp(-1., 1.)
+                    #b, c, h, w = x.shape
+                    print('!!!!')
+                    print(x.shape)
 
                     with self.accelerator.autocast():
                         ## Encode latent
-                        with torch.no_grad():
-                            if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
-                                z = self.vaemodel.module.encode(y).sample()
-                            else:
-                                z = self.vaemodel.encode(y).sample()
+                        #with torch.no_grad():
+                        #    if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
+                        #        z = self.vaemodel.module.encode(y).sample()
+                        #    else:
+                        #        z = self.vaemodel.encode(y).sample()
 
                         ## LDM
                         z = z.detach()
