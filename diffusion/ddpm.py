@@ -416,13 +416,10 @@ class DDPM(nn.Module):
         loss_dict = {}
         if self.parameterization == "eps":
             target = noise
-            print('!!!!!')
-            print(target.shape)
         elif self.parameterization == "x0":
             target = x_start
             model_out = self.predict_start_from_noise(x_noisy, t, model_out)
         elif self.parameterization == 'v':
-            print('velocity')
             target = self.get_velocity(x_start, noise, t)
             model_out = self.get_velocity(x_start, model_out, t)
         else:
@@ -433,6 +430,10 @@ class DDPM(nn.Module):
             reduction_dim = [1,2,3]
         elif len(shape_list) == 3:
             reduction_dim = [1,2]
+
+        print('!!!')
+        print(model_out.shape)
+        print(target.shape)
 
         loss = self.get_loss(model_out, target, mean=False).mean(dim=reduction_dim)
 
