@@ -22,11 +22,11 @@ model:
       mixed_init: -6
       sampling_timesteps: 50
       ddim_sampling_eta: 0
-    siren:
-      in_features: 2
-      out_features: 3
-      hidden_features: 128
-      outermost_linear: True
+  siren:
+    in_features: 2
+    out_features: 3
+    hidden_features: 128
+    outermost_linear: True
 
 data:
   domain: image
