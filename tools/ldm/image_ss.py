@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 from accelerate import Accelerator
 from ema_pytorch import EMA
 
-
+from models.siren import Siren
 from utils.general_utils import symmetrize_image_data, unsymmetrize_image_data, exists, convert_to_coord_format_2d, get_scale_injection
 from evals.eval import test_fid_ddpm, test_fid_ddpm_N
 
@@ -134,8 +134,22 @@ class LDMSSTrainer(object):
                     #y = trans_F.resize(x, 256, antialias = True)
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
-                    print('!!!!')
-                    print(x.shape)
+                    x = x.permute(0, 2, 3, 1).view(128*128, 3)
+
+                    mlp = Siren(in_features=2, out_features=3, hidden_features=128,
+                            hidden_layers=3, outermost_linear=True)
+                    state_dict = mlp.state_dict()
+                    layers = []
+                    layer_names = []
+                    input = []
+                    for l in state_dict:
+                        shape = state_dict[l].shape
+                        layers.append(np.prod(shape))
+                        layer_names.append(l)
+                        input.append(state_dict[l].flatten())
+                    input = torch.hstack(input).unsqueeze(0).cuda()
+                    print('!!!!!!')
+                    print(input.shape)
 
                     with self.accelerator.autocast():
                         ## Encode latent
@@ -144,7 +158,6 @@ class LDMSSTrainer(object):
                         #        z = self.vaemodel.module.encode(y).sample()
                         #    else:
                         #        z = self.vaemodel.encode(y).sample()
-
                         ## LDM
                         z = z.detach()
                         p_loss,_ = self.diffusion_process(z)
