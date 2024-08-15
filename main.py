@@ -51,6 +51,7 @@ def main(args):
         config = OmegaConf.load(args.configs)
         args.data_config = config.data
         print('!!!')
+        print(config.model)
         print(config.model.siren)
         args.siren = config.model.siren
         args.loss_config = config.model.params.lossconfig
