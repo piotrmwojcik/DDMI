@@ -152,7 +152,8 @@ class DDPM(nn.Module):
         if self.mixed_prediction:
             #assert parameterization == 'eps' or 'v'
             if self.domain != 'video':
-                init = mixed_init * torch.ones(size = [1, channels, 1, 1])
+                #init = mixed_init * torch.ones(size = [1, channels, 1, 1])
+                init = mixed_init * torch.ones(size=[1, channels])
                 self.mixing_logit = nn.Parameter(init, requires_grad=True)
             else:
                 init = mixed_init * torch.ones(size = [1, channels, 1])

@@ -16,9 +16,9 @@ model:
     ddpmconfig:
       timesteps: 1000
       image_size: 64
-      channels: 64
+      channels: 50307
       clip_denoised: False
-      mixed_prediction: False
+      mixed_prediction: True
       mixed_init: -6
       sampling_timesteps: 50
       ddim_sampling_eta: 0
