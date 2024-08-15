@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 from accelerate import Accelerator
 from ema_pytorch import EMA
 
-from models.siren import Siren, get_mgrid
+from models.siren import Siren, get_mgrid, generate_mlp_from_weights
 from utils.general_utils import symmetrize_image_data, unsymmetrize_image_data, exists, convert_to_coord_format_2d, get_scale_injection
 from evals.eval import test_fid_ddpm, test_fid_ddpm_N
 
@@ -127,10 +127,11 @@ class LDMSSTrainer(object):
         shape = (self.test_batch_size, self.channels, self.image_size, self.image_size)
         noise_fix = torch.randn((self.test_batch_size, self.channels, self.image_size, self.image_size), device = device)
 
+        cache = {}
+
         with tqdm(initial = self.step, total = self.epochs) as pbar:
             while self.step < self.epochs:
                 for idx, (x, fn) in enumerate(self.data):
-                    print(fn)
                     #x = symmetrize_image_data(x)
                     #y = trans_F.resize(x, 256, antialias = True)
                     #y = y.clamp(-1., 1.)
@@ -139,9 +140,21 @@ class LDMSSTrainer(object):
                     input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                     input = input.repeat(5, 1, 1)
 
-                    mlp = Siren(in_features=2, out_features=3, hidden_features=128,
-                                hidden_layers=3, outermost_linear=True).cuda()
-                    model_output, coords = mlp(input)
+                    _code_list = []
+                    bs = x.shape[0]
+                    for i in range(bs):
+                        if fn[i] in cache:
+                            _code_list.append(generate_mlp_from_weights(cache[fn[i]]))
+                        else:
+                            mlp = Siren(in_features=2, out_features=3, hidden_features=128,
+                                        hidden_layers=3, outermost_linear=True).cuda()
+                            _code_list.append(mlp)
+                    model_output = []
+                    for _code in _code_list:
+                        mo, _ = mlp(input)
+                    model_output.append(mo.unsqueeze(0))
+                    model_output = torch.cat(model_output, dim=0)
+
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
                     for i in range(15):
@@ -150,17 +163,26 @@ class LDMSSTrainer(object):
                     loss.backward()
                     optim.step()
 
-                    state_dict = mlp.state_dict()
-                    layers = []
-                    layer_names = []
-                    input = []
-                    for l in state_dict:
-                        shape = state_dict[l].shape
-                        layers.append(np.prod(shape))
-                        layer_names.append(l)
-                        input.append(state_dict[l].flatten())
-                    z = torch.hstack(input).unsqueeze(0).cuda()
-                    z = z.repeat(5, 1)
+                    z = []
+
+                    for idx, _code in enumerate(_code_list):
+                        mlp = _code[i]
+                        state_dict = mlp.state_dict()
+                        layers = []
+                        layer_names = []
+                        input = []
+                        for l in state_dict:
+                            shape = state_dict[l].shape
+                            layers.append(np.prod(shape))
+                            layer_names.append(l)
+                            input.append(state_dict[l].flatten())
+                        input = torch.hstack(input).cuda()
+                        cache.update({fn[idx]: input})
+                        z.append(input.unsqueeze(0))
+
+                    z = torch.cat(z, dim=0)
+                    print('!!!')
+                    print(z.shape)
 
                     with self.accelerator.autocast():
                         ## Encode latent
