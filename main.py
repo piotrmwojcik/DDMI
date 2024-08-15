@@ -54,7 +54,6 @@ def main(args):
         args.ddpmconfig = config.model.params.ddpmconfig
         args.embed_dim = config.model.embed_dim
         args.lr = config.model.lr
-        args.resolution = config.model.params.ddconfig.resolution
         args.resume = config.model.resume
         args.pretrained = config.model.pretrained
         args.amp = config.model.amp
