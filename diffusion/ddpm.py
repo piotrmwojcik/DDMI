@@ -303,10 +303,6 @@ class DDPM(nn.Module):
 
     def model_predictions(self, x, cond, t, x_self_cond = None, clip_x_start = False, enable_mask=False):
         if cond == None:
-            print('!!')
-            print(x.shape)
-            print(t.shape)
-            print(cond)
             uncond_model_out = self.model(x, t, cond)
             mixing_component = self.get_mixing_component(x, t)
             uncond_model_out = self.get_mixed_prediction(self.mixed_prediction, uncond_model_out, self.mixing_logit, mixing_component)
@@ -339,6 +335,9 @@ class DDPM(nn.Module):
     @torch.no_grad()
     def ddim_sample(self, shape, cond, clip_denoised = False, noise=None, enable_mask=False):
         batch, device, total_timesteps, sampling_timesteps, eta = shape[0], self.betas.device, self.num_timesteps, self.sampling_timesteps, self.ddim_sampling_eta
+
+        print('!!!')
+        print(batch)
 
         times = torch.linspace(-1, total_timesteps - 1, steps=sampling_timesteps + 1)   # [-1, 0, 1, 2, ..., T-1] when sampling_timesteps == total_timesteps
         times = list(reversed(times.int().tolist()))
