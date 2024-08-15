@@ -68,12 +68,12 @@ class LDMSSTrainer(object):
             self.load(os.path.join(args.data_config.save_pth, 'ldm-last.pt'))
             print('Current Epochs :', self.step)
             print('Current iters :', self.current_iters)
-        elif args.pretrained:
-            print('Loading Pretrained Models!')
-            data_pth = torch.load(os.path.join(args.data_config.save_pth, 'ldm-last.pt'), map_location='cpu')
-            self.diffusion_process.load_state_dict(data_pth['diffusion'])
-            if self.accelerator.is_main_process:
-                self.ema.load_state_dict(data_pth['ema'])
+        #elif args.pretrained:
+        #    print('Loading Pretrained Models!')
+        #    data_pth = torch.load(os.path.join(args.data_config.save_pth, 'ldm-last.pt'), map_location='cpu')
+        #    self.diffusion_process.load_state_dict(data_pth['diffusion'])
+        #    if self.accelerator.is_main_process:
+        #        self.ema.load_state_dict(data_pth['ema'])
         #else:
         #    # Load from checkpoint
         #    print('Load VAE checkpoints!')
