@@ -214,25 +214,28 @@ class LDMSSTrainer(object):
                         with torch.inference_mode():
                             z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
                             mlp = generate_mlp_from_weights(z_test[0])
-                            model_input, _ = get_mgrid(128, 2).cuda().unsqueeze(0)
+                            model_input = get_mgrid(128, 2).cuda().unsqueeze(0)
                             #if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
                             #    pe_test = self.vaemodel.module.decode(z_test)
                             #else:
                             #    pe_test = self.vaemodel.decode(z_test)
                             output_img, _ = mlp(model_input)
+                            output_img = output_img.squeeze()
+                            print('!!!')
+                            print(output_img.shape)
                     #output_img = output_img.clamp(min = -1., max = 1.)
                     #output_img = unsymmetrize_image_data(output_img) =
 
                     vtils.save_image(output_img, os.path.join('/data/pwojcik/ddmi_dump/', '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
                     self.save(step = self.step)
                 
-                if self.step % 100 == 0 and self.accelerator.is_main_process and self.step > 300:
-                    if self.test_data is not None:
-                        coords = convert_to_coord_format_2d(1, 256, 256, device = device, hstart=-255/256, hend = 255/256, wstart=-255/256, wend = 255/256)
-                        fid = test_fid_ddpm(self.ema, self.vaemodel, self.mlp, coords, self.test_data, self.accelerator)
-                        print('Step {} FID: {}'.format(self.step, fid))
-                    else:
-                        self.accelerator.print('Not found test dataset to evaluate!')
+                #if self.step % 100 == 0 and self.accelerator.is_main_process and self.step > 300:
+                #    if self.test_data is not None:
+                #        coords = convert_to_coord_format_2d(1, 256, 256, device = device, hstart=-255/256, hend = 255/256, wstart=-255/256, wend = 255/256)
+                #        fid = test_fid_ddpm(self.ema, self.vaemodel, self.mlp, coords, self.test_data, self.accelerator)
+                #        print('Step {} FID: {}'.format(self.step, fid))
+                #    else:
+                #        self.accelerator.print('Not found test dataset to evaluate!')
 
                 self.accelerator.wait_for_everyone()
                 self.step += 1
