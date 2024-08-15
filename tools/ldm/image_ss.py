@@ -157,7 +157,7 @@ class LDMSSTrainer(object):
 
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
-                    for i in range(15):
+                    for i in range(50):
                         loss = ((model_output - x) ** 2).mean()
                     optim.zero_grad()
                     loss.backward()
@@ -180,8 +180,6 @@ class LDMSSTrainer(object):
                         z.append(input.unsqueeze(0))
 
                     z = torch.cat(z, dim=0)
-                    print('!!!')
-                    print(z.shape)
 
                     with self.accelerator.autocast():
                         ## Encode latent
@@ -210,15 +208,17 @@ class LDMSSTrainer(object):
                             self.ema.update()
 
                 if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process: 
-                    coords = convert_to_coord_format_2d(1, 256, 256, device = self.accelerator.device, hstart=-255/256, hend = 255/256, wstart=-255/256, wend = 255/256)
+                    #coords = convert_to_coord_format_2d(1, 256, 256, device = self.accelerator.device, hstart=-255/256, hend = 255/256, wstart=-255/256, wend = 255/256)
                     self.ema.ema_model.eval()
                     with self.accelerator.autocast():
                         with torch.inference_mode():
                             z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
-                            if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
-                                pe_test = self.vaemodel.module.decode(z_test)
-                            else:
-                                pe_test = self.vaemodel.decode(z_test)
+                            print('!!!!!')
+                            print(z_test.shape)
+                            #if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
+                            #    pe_test = self.vaemodel.module.decode(z_test)
+                            #else:
+                            #    pe_test = self.vaemodel.decode(z_test)
                             output_img = self.mlp(coords, hdbf=pe_test)
                     output_img = output_img.clamp(min = -1., max = 1.)
                     output_img = unsymmetrize_image_data(output_img)
