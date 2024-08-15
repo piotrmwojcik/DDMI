@@ -213,18 +213,17 @@ class LDMSSTrainer(object):
                     with self.accelerator.autocast():
                         with torch.inference_mode():
                             z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
-                            print('!!!')
-                            print(z_test.shape)
-                            output_img = []
+                            mlp = generate_mlp_from_weights(z_test[0])
+                            model_input, _ = get_mgrid(128, 2).cuda().unsqueeze(0)
                             #if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
                             #    pe_test = self.vaemodel.module.decode(z_test)
                             #else:
                             #    pe_test = self.vaemodel.decode(z_test)
-                            output_img = self.mlp(coords, hdbf=pe_test)
+                            output_img, _ = mlp(model_input)
                     #output_img = output_img.clamp(min = -1., max = 1.)
                     #output_img = unsymmetrize_image_data(output_img) =
 
-                    vtils.save_image(output_img, os.path.join(self.results_pth, '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
+                    vtils.save_image(output_img, os.path.join('/data/pwojcik/ddmi_dump/', '{}.jpg'.format(self.step)), normalize = False, scale_each = False)
                     self.save(step = self.step)
                 
                 if self.step % 100 == 0 and self.accelerator.is_main_process and self.step > 300:
