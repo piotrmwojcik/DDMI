@@ -160,7 +160,7 @@ class LDMSSTrainer(object):
                             model_output = []
                             for _code in _mlp_list:
                                 mo, _ = mlp(input)
-                            model_output.append(mo.unsqueeze(0))
+                            model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
                             optim.zero_grad()
