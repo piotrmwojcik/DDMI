@@ -517,6 +517,7 @@ class Transformer(nn.Module):
             inp = [x, t_embedding]
         inp = torch.cat(inp, 1)
         print('!!!')
+        print(x.shape)
         print(inp.shape)
         output = self.decoder(inp)
         # TODO: Global residual connection:
