@@ -139,7 +139,7 @@ class LDMSSTrainer(object):
                     input = input.repeat(5, 1, 1)
 
                     mlp = Siren(in_features=2, out_features=3, hidden_features=128,
-                                hidden_layers=3, outermost_linear=True)
+                                hidden_layers=3, outermost_linear=True).cuda()
                     model_output, coords = mlp(input)
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
