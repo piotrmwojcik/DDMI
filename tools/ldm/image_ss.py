@@ -150,9 +150,10 @@ class LDMSSTrainer(object):
                                         hidden_layers=3, outermost_linear=True).cuda()
                             _mlp_list.append(mlp)
 
-                    print(mlp.parameters())
-
-                    optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
+                    combined_parameters = []
+                    for _code in _mlp_list:
+                        combined_parameters += list(_code.parameters())
+                    optim = torch.optim.Adam(lr=1e-4, params=combined_parameters)
 
                     with self.accelerator.autocast():
                         for i in range(20):
