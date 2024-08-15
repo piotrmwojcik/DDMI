@@ -145,7 +145,6 @@ class LDMSSTrainer(object):
 
                     for i in range(15):
                         loss = ((model_output - x) ** 2).mean()
-                    print(loss)
                     optim.zero_grad()
                     loss.backward()
                     optim.step()
