@@ -59,6 +59,23 @@ class SineLayer(nn.Module):
         return torch.sin(intermediate), intermediate
 
 
+def generate_mlp_from_weights(weights):
+    mlp = Siren(in_features=2, out_features=3, hidden_features=128,
+                hidden_layers=3, outermost_linear=True)
+    state_dict = mlp.state_dict()
+    weight_names = list(state_dict.keys())
+    for layer in weight_names:
+        val = state_dict[layer]
+        num_params = np.product(list(val.shape))
+        w = weights[:num_params]
+        w = w.view(*val.shape)
+        state_dict[layer] = w
+        weights = weights[num_params:]
+    assert len(weights) == 0, f"len(weights) = {len(weights)}"
+    mlp.load_state_dict(state_dict)
+    return mlp
+
+
 class Siren(nn.Module):
     def __init__(self, in_features, hidden_features, hidden_layers, out_features, outermost_linear=False,
                  first_omega_0=30, hidden_omega_0=30.):

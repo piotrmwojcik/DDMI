@@ -11,7 +11,7 @@ from torch.nn import functional as F
 
 from embedder import Embedder
 from mlp_models import MLP
-from siren import Siren
+from siren import Siren, generate_mlp_from_weights
 
 
 class SelfAttention(nn.Module):
@@ -543,4 +543,6 @@ if __name__ == "__main__":
     t = torch.randint(0, 1000, (len(input), 1)).cuda()
     print(input.shape, t.shape)
     out = net(input, t)
+    random_mlp = torch.rand(input.shape)
+    siren = generate_mlp_from_weights(random_mlp)
     print(out.shape)
