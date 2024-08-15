@@ -333,6 +333,22 @@ def second_stage_train(args):
     else:
         raise ValueError
 
+import os
+
+class CustomImageFolder(dsets.ImageFolder):
+    def __getitem__(self, index):
+        # Get the original tuple from ImageFolder (image, class_index)
+        original_tuple = super(CustomImageFolder, self).__getitem__(index)
+
+        # Get the path to the image
+        path, _ = self.samples[index]
+
+        # Extract the file name without extension
+        filename = os.path.splitext(os.path.basename(path))[0]
+
+        # Return the image and the filename as the target
+        return original_tuple[0], filename
+
 
 def single_stage_train(args):
     if args.domain == 'image':
@@ -351,7 +367,7 @@ def single_stage_train(args):
             transforms.ToTensor(),
         ])
 
-        train_data = dsets.ImageFolder(args.data_config.data_dir, transform=transform_list)
+        train_data = CustomImageFolder(args.data_config.data_dir, transform=transform_list)
         train_loader = torch.utils.data.DataLoader(train_data,
                                                    batch_size=args.data_config.batch_size,
                                                    shuffle=True,

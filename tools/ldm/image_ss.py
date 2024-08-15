@@ -129,7 +129,8 @@ class LDMSSTrainer(object):
 
         with tqdm(initial = self.step, total = self.epochs) as pbar:
             while self.step < self.epochs:
-                for idx, (x, _) in enumerate(self.data):
+                for idx, (x, fn) in enumerate(self.data):
+                    print(fn)
                     #x = symmetrize_image_data(x)
                     #y = trans_F.resize(x, 256, antialias = True)
                     #y = y.clamp(-1., 1.)
