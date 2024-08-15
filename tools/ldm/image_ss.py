@@ -135,7 +135,7 @@ class LDMSSTrainer(object):
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
                     x = x.permute(0, 2, 3, 1).view(5, 128*128, 3)
-                    input = get_mgrid(128, dim=2).cuda().unsqueeze()
+                    input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                     input = input.repeat(5, 1, 1)
 
                     mlp = Siren(in_features=2, out_features=3, hidden_features=128,
