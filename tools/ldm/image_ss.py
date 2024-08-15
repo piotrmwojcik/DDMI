@@ -145,6 +145,9 @@ class LDMSSTrainer(object):
 
                     for i in range(15):
                         loss = ((model_output - x) ** 2).mean()
+                    optim.zero_grad()
+                    loss.backward()
+                    optim.step()
 
                     state_dict = mlp.state_dict()
                     layers = []
