@@ -147,9 +147,8 @@ class LDMSSTrainer(object):
                         layers.append(np.prod(shape))
                         layer_names.append(l)
                         input.append(state_dict[l].flatten())
-                    input = torch.hstack(input).unsqueeze(0).cuda()
-                    print('!!!!!!')
-                    print(input.shape)
+                    z = torch.hstack(input).unsqueeze(0).cuda()
+                    z = z.repeat(5, 1)
 
                     with self.accelerator.autocast():
                         ## Encode latent
