@@ -221,8 +221,7 @@ class LDMSSTrainer(object):
                             #    pe_test = self.vaemodel.decode(z_test)
                             output_img, _ = mlp(model_input)
                             output_img = output_img.squeeze()
-                            print('!!!')
-                            print(output_img.shape)
+                            print('Saving in ', self.step)
                     #output_img = output_img.clamp(min = -1., max = 1.)
                     #output_img = unsymmetrize_image_data(output_img) =
 
