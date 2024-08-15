@@ -213,6 +213,8 @@ class LDMSSTrainer(object):
                     with self.accelerator.autocast():
                         with torch.inference_mode():
                             z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
+                            print('!!!')
+                            print(z_test.shape)
                             output_img = []
                             #if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
                             #    pe_test = self.vaemodel.module.decode(z_test)
