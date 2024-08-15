@@ -149,19 +149,20 @@ class LDMSSTrainer(object):
                             mlp = Siren(in_features=2, out_features=3, hidden_features=128,
                                         hidden_layers=3, outermost_linear=True).cuda()
                             _code_list.append(mlp)
-                    model_output = []
-                    for _code in _code_list:
-                        mo, _ = mlp(input)
-                    model_output.append(mo.unsqueeze(0))
-                    model_output = torch.cat(model_output, dim=0)
+
 
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
                     for i in range(20):
+                        model_output = []
+                        for _code in _code_list:
+                            mo, _ = mlp(input)
+                        model_output.append(mo.unsqueeze(0))
+                        model_output = torch.cat(model_output, dim=0)
                         loss = ((model_output - x) ** 2).mean()
-                    optim.zero_grad()
-                    loss.backward()
-                    optim.step()
+                        optim.zero_grad()
+                        loss.backward()
+                        optim.step()
 
                     z = []
 
