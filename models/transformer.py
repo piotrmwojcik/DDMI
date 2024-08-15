@@ -544,5 +544,5 @@ if __name__ == "__main__":
     print(input.shape, t.shape)
     out = net(input, t)
     random_mlp = torch.rand(input.shape)
-    siren = generate_mlp_from_weights(random_mlp)
+    siren = generate_mlp_from_weights(random_mlp.squeeze())
     print(out.shape)
