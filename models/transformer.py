@@ -528,7 +528,7 @@ if __name__ == "__main__":
     mlp = MLP(
         in_size=6,
         out_size=1,
-        hidden_neurons=[16, 16, 16],
+        hidden_neurons=[128, 128, 128],
         use_tanh=True,
         over_param=False,
     )
