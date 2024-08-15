@@ -415,6 +415,7 @@ class DDPM(nn.Module):
 
         print('!!!')
         print('!!!')
+        print(x_start.shape)
         print(x_noisy.shape)
         print(model_out.shape)
 
