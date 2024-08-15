@@ -157,7 +157,7 @@ class LDMSSTrainer(object):
 
                     optim = torch.optim.Adam(lr=1e-4, params=mlp.parameters())
 
-                    for i in range(50):
+                    for i in range(20):
                         loss = ((model_output - x) ** 2).mean()
                     optim.zero_grad()
                     loss.backward()
