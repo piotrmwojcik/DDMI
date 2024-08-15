@@ -366,7 +366,8 @@ def single_stage_train(args):
                                                   num_workers=2,
                                                   pin_memory=False,
                                                   drop_last=False)
-
+        print('!!!')
+        print(args.model_cfg)
         mlp = Siren(in_features=args.model_cfg.siren.in_features,
                     out_features=args.model_cfg.siren.out_features,
                     hidden_features=args.model_cfg.siren.hidden_features,
