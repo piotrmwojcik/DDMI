@@ -11,6 +11,7 @@ from torch.nn import functional as F
 
 from embedder import Embedder
 from mlp_models import MLP
+from models.siren import Siren
 
 
 class SelfAttention(nn.Module):
@@ -525,13 +526,8 @@ class Transformer(nn.Module):
 
 
 if __name__ == "__main__":
-    mlp = MLP(
-        in_size=6,
-        out_size=1,
-        hidden_neurons=[128, 128, 128],
-        use_tanh=True,
-        over_param=False,
-    )
+    mlp = Siren(in_features=2, out_features=3, hidden_features=128,
+                hidden_layers=3, outermost_linear=True)
     state_dict = mlp.state_dict()
     layers = []
     layer_names = []
