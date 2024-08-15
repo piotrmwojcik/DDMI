@@ -411,13 +411,11 @@ class DDPM(nn.Module):
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_out = self.model(x_noisy, t, cond)
         mixing_component = self.get_mixing_component(x_noisy, t)
+        print('!!!')
+        print(mixing_component.shape)
+
         model_out = self.get_mixed_prediction(self.mixed_prediction, model_out, self.mixing_logit, mixing_component)
 
-        print('!!!')
-        print('!!!')
-        print(x_start.shape)
-        print(x_noisy.shape)
-        print(model_out.shape)
 
         loss_dict = {}
         if self.parameterization == "eps":
