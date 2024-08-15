@@ -134,7 +134,7 @@ class LDMSSTrainer(object):
                     #y = trans_F.resize(x, 256, antialias = True)
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
-                    x = x.permute(0, 2, 3, 1).view(128*128, 3)
+                    #x = x.permute(0, 2, 3, 1).view(5, 128*128, 3)
 
                     mlp = Siren(in_features=2, out_features=3, hidden_features=128,
                             hidden_layers=3, outermost_linear=True)
