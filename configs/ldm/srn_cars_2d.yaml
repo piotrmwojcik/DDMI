@@ -13,7 +13,6 @@ model:
       ema_decay: 0.9999
       ema_update_every: 10
       gradient_accumulate_every: 5
-
     ddpmconfig:
       timesteps: 1000
       image_size: 64
@@ -28,7 +27,6 @@ model:
       out_features: 3
       hidden_features: 128
       outermost_linear: True
-
 
 data:
   domain: image

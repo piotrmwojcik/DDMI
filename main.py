@@ -50,8 +50,9 @@ def main(args):
     elif args.exp == 'ss_ldm':
         config = OmegaConf.load(args.configs)
         args.data_config = config.data
+        print('!!!')
+        print(config.model.siren)
         args.siren = config.model.siren
-        args.model_cfg = config.model
         args.loss_config = config.model.params.lossconfig
         args.ddpmconfig = config.model.params.ddpmconfig
         args.embed_dim = config.model.embed_dim
