@@ -1,7 +1,12 @@
 import torch
 #from torch.utils import data
 from torchvision import transforms
+import numpy as np
 import torchvision.datasets as dsets
+
+from models.siren import Siren
+from models.transformer import Transformer
+from tools.ldm.image_ss import LDMSSTrainer
 from utils.videoloader import get_loaders
 
 
@@ -314,6 +319,78 @@ def second_stage_train(args):
     else:
         raise ValueError('Undefined Domain!')
     
+
+    if args.mode == 'train':
+        ## Train
+        trainer.train()
+        trainer.save()
+    elif args.mode == 'eval':
+        print('FID Evaluation!')
+        trainer.eval()
+    elif args.mode == 'gen':
+        print('Random image generation!')
+        trainer.generate()
+    else:
+        raise ValueError
+
+
+def single_stage_train(args):
+    if args.domain == 'image':
+        from tools.ldm.image import LDMTrainer
+        from models.d2c_vae.autoencoder_unet import Autoencoder
+        from models.d2c_vae.mlp import MLP
+        from diffusion.ddpm import DDPM
+
+        ## Get data
+        transform_list = transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.Resize((256, 256)),
+            transforms.ToTensor(),
+        ])
+        test_transform_list = transforms.Compose([
+            transforms.RandomHorizontalFlip(),
+            transforms.Resize((args.data_config.test_resolution, args.data_config.test_resolution)),
+            transforms.ToTensor(),
+        ])
+
+        train_data = dsets.ImageFolder(args.data_config.data_dir, transform=transform_list)
+        train_loader = torch.utils.data.DataLoader(train_data,
+                                                   batch_size=args.data_config.batch_size,
+                                                   shuffle=True,
+                                                   num_workers=4,
+                                                   pin_memory=True,
+                                                   drop_last=True)
+
+        test_data = dsets.ImageFolder(args.data_config.test_data_dir, transform=test_transform_list)
+        test_loader = torch.utils.data.DataLoader(test_data,
+                                                  batch_size=args.data_config.test_batch_size,
+                                                  shuffle=False,
+                                                  num_workers=2,
+                                                  pin_memory=False,
+                                                  drop_last=False)
+
+        mlp = Siren(in_features=args.data_config.siren.in_features,
+                    out_features=args.data_config.siren.out_features,
+                    hidden_features=args.data_config.siren.hidden_features,
+                    hidden_layers=args.data_config.siren.hidden_layers,
+                    outermost_linear=args.data_config.siren.outermost_linear)
+        state_dict = mlp.state_dict()
+        layers = []
+        layer_names = []
+        input = []
+        for l in state_dict:
+            shape = state_dict[l].shape
+            layers.append(np.prod(shape))
+            layer_names.append(l)
+            input.append(state_dict[l].flatten())
+
+        diffusionmodel = Transformer(layers, layer_names, split_policy="layer_by_layer").cuda()
+        diffusion_process = DDPM(model=diffusionmodel, **args.ddpmconfig)
+
+        ## Get trainer
+        trainer = LDMSSTrainer(args, diffusionmodel, diffusion_process, train_loader, test_loader)
+    else:
+        raise ValueError('Undefined Domain!')
 
     if args.mode == 'train':
         ## Train

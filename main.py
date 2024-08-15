@@ -5,7 +5,7 @@ import argparse
 from omegaconf import OmegaConf
 
 from utils.general_utils import random_seed
-from exp.stage import first_stage_train, second_stage_train
+from exp.stage import first_stage_train, second_stage_train, single_stage_train
 
 
 def main(args):
@@ -48,7 +48,22 @@ def main(args):
         second_stage_train(args)
 
     else:
-        raise ValueError('Undefined Type!')
+        config = OmegaConf.load(args.configs)
+        args.data_config = config.data
+        args.loss_config = config.model.params.lossconfig
+        args.ddpmconfig = config.model.params.ddpmconfig
+        args.embed_dim = config.model.embed_dim
+        args.lr = config.model.lr
+        args.resolution = config.model.params.ddconfig.resolution
+        args.resume = config.model.resume
+        args.pretrained = config.model.pretrained
+        args.amp = config.model.amp
+        args.use_fp16 = config.model.use_fp16
+        args.domain = config.data.domain
+        args.mode = config.data.mode
+        args.DiT = config.model.DiT
+
+        single_stage_train(args)
 
 
 if __name__ == '__main__':

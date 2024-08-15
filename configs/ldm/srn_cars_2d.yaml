@@ -1,0 +1,41 @@
+model:
+  DiT: False
+  pretrained: True
+  resume: False
+  use_fp16: True
+  amp: True
+  lr: 1e-4
+  embed_dim: 64
+  params:
+    lossconfig:
+      epochs: 1500
+      save_and_sample_every: 25
+      ema_decay: 0.9999
+      ema_update_every: 10
+      gradient_accumulate_every: 5
+
+    ddpmconfig:
+      timesteps: 1000
+      image_size: 64
+      channels: 64
+      clip_denoised: False
+      mixed_prediction: True
+      mixed_init: -6
+      sampling_timesteps: 50
+      ddim_sampling_eta: 0
+    siren:
+      in_features: 2
+      out_features: 3
+      hidden_features: 128
+      outermost_linear: True
+
+
+data:
+  domain: image
+  mode: train
+  data_dir: ./train_data_path/
+  test_data_dir: ./test_data_path/
+  save_pth: ./save_path/
+  batch_size: 5
+  test_batch_size: 6
+  test_resolution: 512
