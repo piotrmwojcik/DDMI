@@ -167,6 +167,7 @@ class LDMSSTrainer(object):
                             print(loss)
                             self.accelerator.backward(loss)
 
+                            self.accelerator.wait_for_everyone()
                             optim.step()
                             optim.zero_grad()
                         if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
