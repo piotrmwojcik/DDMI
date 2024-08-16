@@ -137,9 +137,8 @@ class LDMSSTrainer(object):
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
                     bs = x.shape[0]
-                    x = x.permute(0, 2, 3, 1).view(bs, 128*128, 3).repeat(5, 1, 1)
+                    x = x.permute(0, 2, 3, 1).view(bs, 128*128, 3)
                     input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
-                    input = input.repeat(5, 1, 1)
 
                     _mlp_list = []
 
@@ -151,25 +150,19 @@ class LDMSSTrainer(object):
                                         hidden_layers=3, outermost_linear=True).cuda()
                             _mlp_list.append(mlp)
 
-                    combined_parameters = []
+
                     for _code in _mlp_list:
-                        combined_parameters += list(_code.parameters())
-                    optim = torch.optim.Adam(lr=1e-4, params=combined_parameters)
-
-                    for i in range(500):
-                        model_output = []
-                        with self.accelerator.autocast():
-                            for _code in _mlp_list:
+                        optim = torch.optim.Adam(lr=1e-4, params=_code)
+                        for i in range(500):
+                            with self.accelerator.autocast():
                                 mo, _ = _code(input)
-                                model_output.append(mo)
-                            model_output = torch.cat(model_output, dim=0)
-                            loss = ((model_output - x) ** 2).mean()
-                        self.accelerator.backward(loss)
+                                loss = ((mo - x) ** 2).mean()
+                            self.accelerator.backward(loss)
 
-                        optim.step()
-                        optim.zero_grad()
+                            optim.step()
+                            optim.zero_grad()
                         if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
-                            img_out = model_output[0]
+                            img_out = mo
                             gt_out = x[0]
                             vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
                                              os.path.join('/data/pwojcik/ddmi_dump/', 'inr_t_{}.jpg'.format(self.step)),
