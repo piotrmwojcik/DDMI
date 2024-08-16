@@ -164,7 +164,6 @@ class LDMSSTrainer(object):
                                 model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
-                            print(loss)
                         self.accelerator.backward(loss)
 
                         optim.step()
