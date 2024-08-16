@@ -151,7 +151,7 @@ class LDMSSTrainer(object):
 
                     for idx, _code in enumerate(_mlp_list):
                         optim = torch.optim.Adam(lr=1e-4, params=_code.parameters())
-                        for i in range(500):
+                        for i in range(25):
                             with self.accelerator.autocast():
                                 input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                                 mo, _ = _code(input)
@@ -160,16 +160,16 @@ class LDMSSTrainer(object):
 
                             optim.step()
                             optim.zero_grad()
-                        if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
-                            img_out = mo
-                            gt_out = x[0]
-                            vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
-                                             os.path.join('/data/pwojcik/ddmi_dump/',
-                                                          fn[idx] + '_inr_t_{}.jpg'.format(self.step)),
-                                             normalize=False, scale_each=False)
-                            vtils.save_image(gt_out.view(128, 128, 3).permute(2, 0, 1),
-                                             os.path.join('/data/pwojcik/ddmi_dump/', 'gt_t_{}.jpg'.format(self.step)),
-                                             normalize=False, scale_each=False)
+                        # if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
+                        #     img_out = mo
+                        #     gt_out = x[0]
+                        #     vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
+                        #                      os.path.join('/data/pwojcik/ddmi_dump/',
+                        #                                   fn[idx] + '_inr_t_{}.jpg'.format(self.step)),
+                        #                      normalize=False, scale_each=False)
+                        #     vtils.save_image(gt_out.view(128, 128, 3).permute(2, 0, 1),
+                        #                      os.path.join('/data/pwojcik/ddmi_dump/', 'gt_t_{}.jpg'.format(self.step)),
+                        #                      normalize=False, scale_each=False)
 
                     z = []
 
