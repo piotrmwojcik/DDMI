@@ -159,7 +159,7 @@ class LDMSSTrainer(object):
                         for i in range(50):
                             model_output = []
                             for _code in _mlp_list:
-                                mo, _ = mlp(input)
+                                mo, _ = _code(input)
                             model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
