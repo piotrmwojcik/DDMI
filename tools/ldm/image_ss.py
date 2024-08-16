@@ -155,7 +155,7 @@ class LDMSSTrainer(object):
                             with self.accelerator.autocast():
                                 input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                                 mo, _ = _code(input)
-                                loss = ((mo - x) ** 2).mean()
+                                loss = ((mo - x[idx]) ** 2).mean()
                             self.accelerator.backward(loss)
 
                             optim.step()
