@@ -156,20 +156,19 @@ class LDMSSTrainer(object):
                         combined_parameters += list(_code.parameters())
                     optim = torch.optim.Adam(lr=1e-4, params=combined_parameters)
 
-                    with self.accelerator.autocast():
-                        for i in range(100):
-                            model_output = []
+                    for i in range(100):
+                        model_output = []
+                        with self.accelerator.autocast():
                             for _code in _mlp_list:
                                 mo, _ = _code(input)
                                 model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
                             print(loss)
-                            self.accelerator.backward(loss)
+                        self.accelerator.backward(loss)
 
-                            self.accelerator.wait_for_everyone()
-                            optim.step()
-                            optim.zero_grad()
+                        optim.step()
+                        optim.zero_grad()
                         if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
                             print('done')
                             img_out = model_output[0]
