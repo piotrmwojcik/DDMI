@@ -136,13 +136,14 @@ class LDMSSTrainer(object):
                     #y = trans_F.resize(x, 256, antialias = True)
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
+                    bs = x.shape[0]
                     x = x.permute(0, 2, 3, 1).view(5, 128*128, 3).repeat(5, 1, 1)
                     input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
 
                     input = input.repeat(5, 1, 1)
 
                     _mlp_list = []
-                    bs = x.shape[0]
+
                     for i in range(bs):
                         if fn[i] in cache:
                             _mlp_list.append(generate_mlp_from_weights(cache[fn[i]]).cuda())
