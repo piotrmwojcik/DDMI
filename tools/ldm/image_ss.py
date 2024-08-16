@@ -156,7 +156,7 @@ class LDMSSTrainer(object):
                         combined_parameters += list(_code.parameters())
                     optim = torch.optim.Adam(lr=1e-4, params=combined_parameters)
 
-                    for i in range(250):
+                    for i in range(500):
                         model_output = []
                         with self.accelerator.autocast():
                             for _code in _mlp_list:
