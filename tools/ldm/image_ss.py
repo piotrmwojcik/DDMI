@@ -162,10 +162,10 @@ class LDMSSTrainer(object):
                             model_output = []
                             for _code in _mlp_list:
                                 mo, _ = _code(input)
-                            print(mo)
-                            model_output.append(mo)
+                                model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
+
                             optim.zero_grad()
                             loss.backward()
                             optim.step()
