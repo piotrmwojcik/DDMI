@@ -138,7 +138,6 @@ class LDMSSTrainer(object):
                     #b, c, h, w = x.shape
                     bs = x.shape[0]
                     x = x.permute(0, 2, 3, 1).view(bs, 128*128, 3)
-                    input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
 
                     _mlp_list = []
 
@@ -154,6 +153,7 @@ class LDMSSTrainer(object):
                         optim = torch.optim.Adam(lr=1e-4, params=_code.parameters())
                         for i in range(500):
                             with self.accelerator.autocast():
+                                input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                                 mo, _ = _code(input)
                                 loss = ((mo - x) ** 2).mean()
                             self.accelerator.backward(loss)
@@ -164,7 +164,7 @@ class LDMSSTrainer(object):
                             img_out = mo
                             gt_out = x[0]
                             vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
-                                             os.path.join('/data/pwojcik/ddmi_dump/', 'inr_t_{}.jpg'.format(self.step)),
+                                             os.path.join('/data/pwojcik/ddmi_dump/', fn[i] + '_inr_t_{}.jpg'.format(self.step)),
                                              normalize=False, scale_each=False)
                             vtils.save_image(gt_out.view(128, 128, 3).permute(2, 0, 1),
                                              os.path.join('/data/pwojcik/ddmi_dump/', 'gt_t_{}.jpg'.format(self.step)),
