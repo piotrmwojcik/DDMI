@@ -162,6 +162,7 @@ class LDMSSTrainer(object):
                             model_output = []
                             for _code in _mlp_list:
                                 mo, _ = _code(input)
+                            print(mo)
                             model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
@@ -170,7 +171,6 @@ class LDMSSTrainer(object):
                             optim.step()
                         if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
                             print('done')
-                            print(input)
                             img_out = model_output[0]
                             gt_out = x[0]
                             vtils.save_image(img_out.view(128, 128, 3).permute(2, 0, 1),
