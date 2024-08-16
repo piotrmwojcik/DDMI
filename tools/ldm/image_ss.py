@@ -137,9 +137,8 @@ class LDMSSTrainer(object):
                     #y = y.clamp(-1., 1.)
                     #b, c, h, w = x.shape
                     bs = x.shape[0]
-                    x = x.permute(0, 2, 3, 1).view(5, 128*128, 3).repeat(5, 1, 1)
+                    x = x.permute(0, 2, 3, 1).view(bs, 128*128, 3).repeat(5, 1, 1)
                     input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
-
                     input = input.repeat(5, 1, 1)
 
                     _mlp_list = []
@@ -165,7 +164,7 @@ class LDMSSTrainer(object):
                                 model_output.append(mo)
                             model_output = torch.cat(model_output, dim=0)
                             loss = ((model_output - x) ** 2).mean()
-                            print(loss)
+                            self.accelerator.backward(loss)
 
                             optim.zero_grad()
                             loss.backward()
