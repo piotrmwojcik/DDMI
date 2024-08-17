@@ -189,6 +189,9 @@ class LDMSSTrainer(object):
 
                     z = torch.cat(z, dim=0)
 
+                    print(z.min().item())
+                    print(z.max().item())
+
                     with self.accelerator.autocast():
                         ## Encode latent
                         #with torch.no_grad():
@@ -215,7 +218,8 @@ class LDMSSTrainer(object):
                         if self.accelerator.is_main_process:
                             self.ema.update()
 
-                if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process: 
+                #if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
+                if self.accelerator.is_main_process:
                     #coords = convert_to_coord_format_2d(1, 256, 256, device = self.accelerator.device, hstart=-255/256, hend = 255/256, wstart=-255/256, wend = 255/256)
                     self.ema.ema_model.eval()
                     with self.accelerator.autocast():
