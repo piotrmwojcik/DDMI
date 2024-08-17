@@ -4,7 +4,7 @@ model:
   resume: False
   use_fp16: True
   amp: True
-  lr: 1e-4
+  lr: 2e-4
   embed_dim: 64
   params:
     lossconfig:
