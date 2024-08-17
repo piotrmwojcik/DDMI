@@ -218,11 +218,11 @@ class LDMSSTrainer(object):
                         if self.accelerator.is_main_process:
                             self.ema.update()
 
-                        with torch.inference_mode():
-                            z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
-                            print('Sampling')
-                            print(z_test.min().item())
-                            print(z_test.max().item())
+                            with torch.inference_mode():
+                                z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
+                                print('Sampling')
+                                print(z_test.min().item())
+                                print(z_test.max().item())
 
                 #if self.step % self.save_and_sample_every == 0 and self.accelerator.is_main_process:
                 if self.accelerator.is_main_process:
