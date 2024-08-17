@@ -189,8 +189,8 @@ class LDMSSTrainer(object):
 
                     z = torch.cat(z, dim=0)
 
-                    print(z.min().item())
-                    print(z.max().item())
+                    #print(z.min().item())
+                    #print(z.max().item())
 
                     with self.accelerator.autocast():
                         ## Encode latent
