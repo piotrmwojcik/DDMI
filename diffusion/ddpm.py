@@ -371,8 +371,6 @@ class DDPM(nn.Module):
 
     @torch.no_grad()
     def sample(self, shape, cond=None, return_intermediates=False, noise=None, enable_mask=False):
-        image_size = self.image_size
-        channels = self.channels
 
         ''' ddim sampling '''
         if self.is_ddim_sampling:

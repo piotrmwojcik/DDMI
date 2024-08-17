@@ -225,6 +225,9 @@ class LDMSSTrainer(object):
                     with self.accelerator.autocast():
                         with torch.inference_mode():
                             z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
+                            print('Sampling')
+                            print(z_test.min().item())
+                            print(z_test.max().item())
                             mlp = generate_mlp_from_weights(z_test[0]).cuda()
                             model_input = get_mgrid(128, 2).cuda().unsqueeze(0)
                             #if isinstance(self.vaemodel, torch.nn.parallel.DistributedDataParallel):
