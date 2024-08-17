@@ -97,7 +97,7 @@ class DDPM(nn.Module):
                  v_posterior=0.,  # weight for choosing posterior variance as sigma = (1-v) * beta_tilde + v * beta
                  l_simple_weight=1.,
                  conditioning_key=None,
-                 parameterization="eps",  # all assuming fixed variance schedules
+                 parameterization="x0",  # all assuming fixed variance schedules
                  use_positional_encodings=False,
                  learn_logvar=False,
                  logvar_init=0.,
@@ -409,9 +409,6 @@ class DDPM(nn.Module):
         noise = default(noise, lambda: torch.randn_like(x_start))
         x_noisy = self.q_sample(x_start=x_start, t=t, noise=noise)
         model_out = self.model(x_noisy, t, cond)
-        print('!!!!')
-        print(model_out.min().item())
-        print(model_out.max().item())
         mixing_component = self.get_mixing_component(x_noisy, t)
 
         model_out = self.get_mixed_prediction(self.mixed_prediction, model_out, self.mixing_logit, mixing_component)
