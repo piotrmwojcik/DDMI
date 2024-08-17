@@ -6,7 +6,7 @@ import torchvision.datasets as dsets
 
 from models.siren import Siren
 from models.transformer import Transformer
-from tools.ldm.image_ss import LDMSSTrainer
+from tools.ldm.image_single_stage import LDMSSTrainer
 from utils.videoloader import get_loaders
 
 
