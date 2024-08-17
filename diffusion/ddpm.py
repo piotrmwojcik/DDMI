@@ -97,7 +97,7 @@ class DDPM(nn.Module):
                  v_posterior=0.,  # weight for choosing posterior variance as sigma = (1-v) * beta_tilde + v * beta
                  l_simple_weight=1.,
                  conditioning_key=None,
-                 parameterization="x0",  # all assuming fixed variance schedules
+                 parameterization="eps",  # all assuming fixed variance schedules
                  use_positional_encodings=False,
                  learn_logvar=False,
                  logvar_init=0.,
@@ -221,7 +221,6 @@ class DDPM(nn.Module):
         velocity = extract_into_tensor(self.sqrt_alphas_cumprod, t, sample.shape) * noise - extract_into_tensor(self.sqrt_one_minus_alphas_cumprod, t, sample.shape) * sample
         return velocity
 
-
     def q_mean_variance(self, x_start, t):
         """
         Get the distribution q(x_t | x_0).
@@ -299,7 +298,6 @@ class DDPM(nn.Module):
         if return_intermediates:
             return img, intermediates
         return img
-    
 
     def model_predictions(self, x, cond, t, x_self_cond = None, clip_x_start = False, enable_mask=False):
         if cond == None:
@@ -362,7 +360,6 @@ class DDPM(nn.Module):
             c = (1 - alpha_next - sigma ** 2).sqrt()
 
             noise = torch.randn_like(img)
-
 
             img = x_start * alpha_next.sqrt() + \
                   c * pred_noise + \
@@ -433,7 +430,7 @@ class DDPM(nn.Module):
         elif len(shape_list) == 2:
             reduction_dim = [1]
 
-        loss = self.get_loss(model_out, target, mean=False).mean(dim=reduction_dim)
+        loss = self.get_loss(model_out, target, mean=False).mean(dim=[1, 2, 3])
 
         log_prefix = 'train' if self.training else 'val'
 
