@@ -199,7 +199,6 @@ class LDMSSTrainer(object):
                         #    else:
                         #        z = self.vaemodel.encode(y).sample()
                         ## LDM
-                        z = torch.zeros(z.shape).cuda()
                         z = z.detach()
                         p_loss,_ = self.diffusion_process(z)
                         p_loss = p_loss / self.gradient_accumulate_every
