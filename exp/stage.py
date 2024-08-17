@@ -397,7 +397,10 @@ def single_stage_train(args):
             layer_names.append(l)
             input.append(state_dict[l].flatten())
 
-        diffusionmodel = Transformer(layers, layer_names, split_policy="layer_by_layer").cuda()
+        diffusionmodel = Transformer(layers, layer_names, split_policy="layer_by_layer",
+                                     n_embd=1920,
+                                     n_layer=12,
+                                     n_head=16).cuda()
         diffusion_process = DDPM(model=diffusionmodel, **args.ddpmconfig)
 
         ## Get trainer
