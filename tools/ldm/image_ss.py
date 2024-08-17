@@ -219,7 +219,7 @@ class LDMSSTrainer(object):
                             self.ema.update()
 
                             with torch.inference_mode():
-                                z_test = self.ema.ema_model.sample(shape = shape, noise = None)
+                                z_test = self.ema.ema_model.sample(shape = shape, noise = noise_fix)
                                 print('Sampling')
                                 print(z_test.min().item())
                                 print(z_test.max().item())
