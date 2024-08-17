@@ -19,7 +19,7 @@ model:
       channels: 50307
       clip_denoised: False
       mixed_prediction: True
-      mixed_init: -6
+      mixed_init: -1
       sampling_timesteps: 50
       ddim_sampling_eta: 0
   siren:
