@@ -398,6 +398,7 @@ def single_stage_train(args):
             input.append(state_dict[l].flatten())
 
         diffusionmodel = Transformer(layers, layer_names, split_policy="layer_by_layer",
+                                     predict_xstart=False,
                                      n_embd=1920,
                                      n_layer=12,
                                      n_head=16).cuda()

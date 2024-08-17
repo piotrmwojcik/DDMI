@@ -430,7 +430,7 @@ class DDPM(nn.Module):
         elif len(shape_list) == 2:
             reduction_dim = [1]
 
-        loss = self.get_loss(model_out, target, mean=False).mean(dim=[1, 2, 3])
+        loss = self.get_loss(model_out, target, mean=False).mean(dim=reduction_dim)
 
         log_prefix = 'train' if self.training else 'val'
 
