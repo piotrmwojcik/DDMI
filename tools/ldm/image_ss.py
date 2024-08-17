@@ -151,7 +151,7 @@ class LDMSSTrainer(object):
 
                     for idx, _code in enumerate(_mlp_list):
                         optim = torch.optim.Adam(lr=1e-4, params=_code.parameters())
-                        for i in range(25):
+                        for i in range(100):
                             with self.accelerator.autocast():
                                 input = get_mgrid(128, dim=2).cuda().unsqueeze(0)
                                 mo, _ = _code(input)
