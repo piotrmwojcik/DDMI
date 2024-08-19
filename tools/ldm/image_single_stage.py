@@ -182,7 +182,7 @@ class LDMSSTrainer(object):
                             layers.append(np.prod(st_shape))
                             layer_names.append(l)
                             input.append(state_dict[l].flatten())
-                        input = torch.hstack(input).cuda()
+                        input = torch.hstack(input).device(self.accelerator.device)
                         cache.update({fn[idx]: input})
                         z.append(input.unsqueeze(0))
 
@@ -209,7 +209,6 @@ class LDMSSTrainer(object):
                         print('!!!')
                         print(t.device)
                         print(z.device)
-                        print(self.diffusionmodel.device)
 
                         # Execute a diffusion forward pass
                         loss_terms = self.diffusion_process.training_losses(
