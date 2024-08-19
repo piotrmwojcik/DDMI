@@ -123,7 +123,7 @@ class LDMSSTrainer(object):
 
     def train(self):
         device = self.accelerator.device
-        self.diffusion_process.train()
+        #self.diffusion_process.train()
         shape = (self.test_batch_size, 50307)
         noise_fix = torch.randn((self.test_batch_size, 50307), device = device)
 
