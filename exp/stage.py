@@ -4,6 +4,7 @@ from torchvision import transforms
 import numpy as np
 import torchvision.datasets as dsets
 
+from gaussian_diffusion.gaussian_diffusion import GaussianDiffusion, ModelMeanType, ModelVarType, LossType
 from models.siren import Siren
 from models.transformer import Transformer
 from tools.ldm.image_single_stage import LDMSSTrainer
@@ -402,8 +403,17 @@ def single_stage_train(args):
                                      n_embd=1920,
                                      n_layer=12,
                                      n_head=16).cuda()
-        diffusion_process = DDPM(model=diffusionmodel, **args.ddpmconfig)
-
+        timesteps = 500
+        betas = torch.tensor(np.linspace(1e-4, 2e-2, timesteps))
+        #model_mean_type: START_X
+        #model_var_type: FIXED_LARGE
+        #loss_type: MSE
+        diffusion_process = GaussianDiffusion(
+            betas=betas,
+            model_mean_type=ModelMeanType['START_X'],
+            model_var_type=ModelVarType['FIXED_LARGE'],
+            loss_type=LossType['MSE'],
+        )
         ## Get trainer
         trainer = LDMSSTrainer(args, diffusionmodel, diffusion_process, train_loader, test_loader)
     else:

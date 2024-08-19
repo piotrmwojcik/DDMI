@@ -123,14 +123,13 @@ class GaussianDiffusion:
         model_mean_type,
         model_var_type,
         loss_type,
-        diff_pl_module,
         rescale_timesteps=False,
     ):
         self.model_mean_type = model_mean_type
         self.model_var_type = model_var_type
         self.loss_type = loss_type
         self.rescale_timesteps = rescale_timesteps
-        self.diff_module = diff_pl_module
+        #self.diff_module = diff_pl_module
         # Use float64 for accuracy.
         betas = np.array(betas, dtype=np.float64)
         self.betas = betas
@@ -146,10 +145,10 @@ class GaussianDiffusion:
         self.alphas_cumprod_prev = np.append(1.0, self.alphas_cumprod[:-1])
         self.alphas_cumprod_next = np.append(self.alphas_cumprod[1:], 0.0)
         assert self.alphas_cumprod_prev.shape == (self.num_timesteps,)
-        diff_pl_module.register_buffer("betas", torch.tensor(self.betas))
-        diff_pl_module.register_buffer("alphas", torch.tensor(self.betas))
-        diff_pl_module.register_buffer("alpha_hats", torch.tensor(self.betas))
-        diff_pl_module.register_buffer("alpha_hats_prev", torch.tensor(self.betas))
+        #diff_pl_module.register_buffer("betas", torch.tensor(self.betas))
+        #diff_pl_module.register_buffer("alphas", torch.tensor(self.betas))
+        #diff_pl_module.register_buffer("alpha_hats", torch.tensor(self.betas))
+        #diff_pl_module.register_buffer("alpha_hats_prev", torch.tensor(self.betas))
 
         # calculations for diffusion q(x_t | x_{t-1}) and others
         self.sqrt_alphas_cumprod = np.sqrt(self.alphas_cumprod)
@@ -751,7 +750,7 @@ class GaussianDiffusion:
         return {"output": output, "pred_xstart": out["pred_xstart"]}
 
     def training_losses(
-        self, model, x_start, t, mlp_kwargs, wandb_logger, model_kwargs=None, noise=None
+        self, model, x_start, t, model_kwargs=None, noise=None
     ):
         """
         Compute training losses for a single timestep.

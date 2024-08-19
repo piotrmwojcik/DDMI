@@ -199,8 +199,26 @@ class LDMSSTrainer(object):
                         #    else:
                         #        z = self.vaemodel.encode(y).sample()
                         ## LDM
-                        z = z.detach()
-                        p_loss,_ = self.diffusion_process(z)
+                        # Sample a diffusion timestep
+                        t = (
+                            torch.randint(0, high=self.diffusion_process.num_timesteps, size=(z.shape[0],))
+                                .long()
+                                .to(z.device)
+                        )
+
+                        # Execute a diffusion forward pass
+                        loss_terms = self.diffusion_process.training_losses(
+                            self.diffusionmodel,
+                            z,
+                            t,
+                            model_kwargs=None,
+                        )
+                        loss_mse = loss_terms["loss"].mean()
+                        #self.log("train_loss", loss_mse)
+
+                        #loss = loss_mse
+                        #z = z.detach()
+                        p_loss,_ = loss_mse
                         p_loss = p_loss / self.gradient_accumulate_every
 
                     self.accelerator.backward(p_loss)
