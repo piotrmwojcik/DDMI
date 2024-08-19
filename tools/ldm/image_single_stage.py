@@ -182,7 +182,7 @@ class LDMSSTrainer(object):
                             layers.append(np.prod(st_shape))
                             layer_names.append(l)
                             input.append(state_dict[l].flatten())
-                        input = torch.hstack(input).device(self.accelerator.device)
+                        input = torch.hstack(input).to(self.accelerator.device)
                         cache.update({fn[idx]: input})
                         z.append(input.unsqueeze(0))
 
