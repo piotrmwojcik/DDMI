@@ -203,7 +203,7 @@ class LDMSSTrainer(object):
                         t = (
                             torch.randint(0, high=self.diffusion_process.num_timesteps, size=(z.shape[0],))
                                 .long()
-                                .to(self.diffusionmodel.device)
+                                .to(self.accelerator.device)
                         )
 
                         # Execute a diffusion forward pass
