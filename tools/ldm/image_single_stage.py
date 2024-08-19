@@ -54,10 +54,10 @@ class LDMSSTrainer(object):
         self.test_resolution = args.data_config.test_resolution
 
         # Optimizers
-        self.dae_opt = torch.optim.AdamW(self.diffusionmodel.parameters(), lr = args.lr, weight_decay=0.)
+        self.dae_opt = torch.optim.AdamW(diffusionmodel.parameters(), lr = args.lr, weight_decay=0.)
 
         if self.accelerator.is_main_process:
-            self.ema = EMA(diffusion_process, beta = args.loss_config.ema_decay, update_every = args.loss_config.ema_update_every)
+            self.ema = EMA(diffusionmodel, beta = args.loss_config.ema_decay, update_every = args.loss_config.ema_update_every)
             self.ema.to(self.accelerator.device)
         # Reset epochs and iters
         self.step = 0
