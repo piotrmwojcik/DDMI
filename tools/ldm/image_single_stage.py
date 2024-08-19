@@ -218,7 +218,7 @@ class LDMSSTrainer(object):
 
                         #loss = loss_mse
                         #z = z.detach()
-                        p_loss,_ = loss_mse
+                        p_loss = loss_mse
                         p_loss = p_loss / self.gradient_accumulate_every
 
                     self.accelerator.backward(p_loss)
