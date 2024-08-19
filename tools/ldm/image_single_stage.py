@@ -182,7 +182,7 @@ class LDMSSTrainer(object):
                             layers.append(np.prod(st_shape))
                             layer_names.append(l)
                             input.append(state_dict[l].flatten())
-                        input = torch.hstack(input).to(self.accelerator.device)
+                        input = torch.hstack(input).cuda()
                         cache.update({fn[idx]: input})
                         z.append(input.unsqueeze(0))
 
@@ -203,7 +203,7 @@ class LDMSSTrainer(object):
                         t = (
                             torch.randint(0, high=self.diffusion_process.num_timesteps, size=(z.shape[0],))
                                 .long()
-                                .to(z.device)
+                                .cuda()
                         )
 
                         print('!!!')
