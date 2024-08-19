@@ -56,6 +56,9 @@ class LDMSSTrainer(object):
         # Optimizers
         self.dae_opt = torch.optim.AdamW(self.diffusionmodel.parameters(), lr = args.lr, weight_decay=0.)
 
+        print('!!!')
+        print('done')
+
         if self.accelerator.is_main_process:
             self.ema = EMA(self.diffusionmodel, beta = args.loss_config.ema_decay, update_every = args.loss_config.ema_update_every)
             self.ema.to(self.accelerator.device)
