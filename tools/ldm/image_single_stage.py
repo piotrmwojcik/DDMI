@@ -212,7 +212,6 @@ class LDMSSTrainer(object):
 
                         # Execute a diffusion forward pass
                         loss_terms = self.diffusion_process.training_losses(
-                            self.diffusionmodel,
                             z,
                             t,
                             model_kwargs=None,

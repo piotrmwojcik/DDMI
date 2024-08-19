@@ -409,6 +409,7 @@ def single_stage_train(args):
         #model_var_type: FIXED_LARGE
         #loss_type: MSE
         diffusion_process = GaussianDiffusion(
+            model=diffusionmodel,
             betas=betas,
             model_mean_type=ModelMeanType['START_X'],
             model_var_type=ModelVarType['FIXED_LARGE'],
