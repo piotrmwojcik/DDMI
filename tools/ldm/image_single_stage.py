@@ -209,6 +209,7 @@ class LDMSSTrainer(object):
                         print('!!!')
                         print(t.device)
                         print(z.device)
+                        print(z.diffusionmodel.device)
 
                         # Execute a diffusion forward pass
                         loss_terms = self.diffusion_process.training_losses(
